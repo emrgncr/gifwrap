@@ -183,7 +183,7 @@ exports.quantizeSorokin = function (imageOrImages, maxColorIndexes, histogram, d
     }
     _quantize(imageOrImages, 'RGBQuant', maxColorIndexes, histogramID, dither);
 }
-let otofix = exports.quantizeSorokin
+otofix = exports.quantizeSorokin
 // otofix = function (imageOrImages, maxColorIndexes, histogram, dither) {
 //     maxColorIndexes = maxColorIndexes || 256;
 //     histogram = histogram || 'min-pop';
