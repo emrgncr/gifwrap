@@ -14,6 +14,8 @@ const INVALID_SUFFIXES = ['.jpg', '.jpeg', '.png', '.bmp'];
 
 const defaultCodec = new GifCodec();
 
+let otofix;
+
 /**
  * cloneFrames() clones provided frames. It's a utility method for cloning an entire array of frames at once.
  * 
@@ -54,7 +56,12 @@ exports.getColorInfo = function (frames, maxGlobalIndex) {
             usesTransparency = true;
         }
         if (palette.indexCount > 256) {
-            throw new GifError(`Frame ${i} uses more than 256 color indexes`);
+            //if broken fix automatically
+            otofix(frames[i],255)
+            console.log(`Automatically fixed frame ${i}`)
+            palette = frames[i].getPalette();
+            if(palette.indexCount > 255){
+            throw new GifError(`Frame ${i} uses more than 256 color indexes`);}
         }
         palettes.push(palette);
     }
@@ -176,6 +183,28 @@ exports.quantizeSorokin = function (imageOrImages, maxColorIndexes, histogram, d
     }
     _quantize(imageOrImages, 'RGBQuant', maxColorIndexes, histogramID, dither);
 }
+let otofix = exports.quantizeSorokin
+// otofix = function (imageOrImages, maxColorIndexes, histogram, dither) {
+//     maxColorIndexes = maxColorIndexes || 256;
+//     histogram = histogram || 'min-pop';
+//     let histogramID;
+//     switch (histogram) {
+//         case 'min-pop':
+//         histogramID = 2;
+//         break;
+
+//         case 'top-pop':
+//         histogramID = 1;
+//         break
+
+//         default:
+//         throw new Error(`Invalid quantizeSorokin histogram '${histogram}'`);
+//     }
+//     _quantize(imageOrImages, 'RGBQuant', maxColorIndexes, histogramID, dither);
+// }
+
+
+
 
 /**
  * Quantizes colors so that there are at most a given number of color indexes (including transparency) across all provided images. Uses an algorithm by Xiaolin Wu.
